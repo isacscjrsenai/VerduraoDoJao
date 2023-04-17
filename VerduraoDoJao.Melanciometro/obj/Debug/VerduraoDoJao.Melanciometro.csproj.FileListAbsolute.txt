@@ -1,0 +1,8 @@
+C:\Users\ALUNO\source\repos\VerduraoDoJao\VerduraoDoJao.Melanciometro\bin\Debug\VerduraoDoJao.Melanciometro.exe.config
+C:\Users\ALUNO\source\repos\VerduraoDoJao\VerduraoDoJao.Melanciometro\bin\Debug\VerduraoDoJao.Melanciometro.exe
+C:\Users\ALUNO\source\repos\VerduraoDoJao\VerduraoDoJao.Melanciometro\bin\Debug\VerduraoDoJao.Melanciometro.pdb
+C:\Users\ALUNO\source\repos\VerduraoDoJao\VerduraoDoJao.Melanciometro\obj\Debug\VerduraoDoJao.Melanciometro.csproj.AssemblyReference.cache
+C:\Users\ALUNO\source\repos\VerduraoDoJao\VerduraoDoJao.Melanciometro\obj\Debug\VerduraoDoJao.Melanciometro.csproj.SuggestedBindingRedirects.cache
+C:\Users\ALUNO\source\repos\VerduraoDoJao\VerduraoDoJao.Melanciometro\obj\Debug\VerduraoDoJao.Melanciometro.csproj.CoreCompileInputs.cache
+C:\Users\ALUNO\source\repos\VerduraoDoJao\VerduraoDoJao.Melanciometro\obj\Debug\VerduraoDoJao.Melanciometro.exe
+C:\Users\ALUNO\source\repos\VerduraoDoJao\VerduraoDoJao.Melanciometro\obj\Debug\VerduraoDoJao.Melanciometro.pdb

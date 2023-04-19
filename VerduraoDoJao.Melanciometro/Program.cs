@@ -12,7 +12,17 @@ namespace VerduraoDoJao.Melanciometro
         static void Main(string[] args)
         {
             Dictionary<string, Dictionary<string,string>> caminhoes = new Dictionary<string, Dictionary<string, string>>();
-            const double precoNormal = 5.5 ,  precoBaby = 8.56;
+            Dictionary<string, Dictionary<string, string>> produtos = new Dictionary<string, Dictionary<string, string>>
+            {
+                { "Melancia Normal", new Dictionary<string, string>()
+                }
+            };
+            produtos["Melancia Normal"].Add("preço", "5.5");
+            produtos["Melancia Normal"].Add("custo", "2.5");
+            produtos.Add("Melancia Baby", new Dictionary<string, string>());
+            produtos["Melancia Baby"].Add("preço", "8.56");
+            produtos["Melancia Baby"].Add("custo", "4.5");
+            const double precoNormal = 5.5 , precoBaby = 8.56;
             while (true)
             {
                 Console.Clear();
@@ -20,7 +30,9 @@ namespace VerduraoDoJao.Melanciometro
                                   $"2 - Deletar caminhão \n" +
                                   $"3 - Ver registro de caminhão por placa \n" +
                                   $"4 - Ver registro por CPF/CNPJ \n" +
-                                  $"5 - Sair");
+                                  $"5 - Registrar produto \n"+
+                                  $"6 - Deletar produto \n" +
+                                  $"7 - Sair");
                                 
                 var option = Console.ReadLine();                    
                 switch (option)
@@ -98,7 +110,7 @@ namespace VerduraoDoJao.Melanciometro
                         }
                         break;
 
-                        case "4":
+                     case "4":
                             Console.Clear();
                             Console.WriteLine("Digite o CPF/CNPJ");
                             var idAProcurar = Console.ReadLine();
@@ -124,7 +136,23 @@ namespace VerduraoDoJao.Melanciometro
 
                         break;
 
-                        case "5":
+                    case "5":
+                        Console.Clear();
+                        Console.WriteLine("ADICIONAR UM PRODUTO");
+                        Console.WriteLine("Digite o nome do produto:");
+                        var nomeProduto = Console.ReadLine();
+                        Console.WriteLine("Digite o preço do produto:");
+                        var precoProduto = Console.ReadLine();
+                        Console.WriteLine("Digite o custo do produto:");
+                        var custoProduto = Console.ReadLine();
+
+                        break;
+                    
+                    case "6": 
+                        Console.Clear();
+                        break;
+
+                    case "7":
                             Console.Clear();
                             Console.WriteLine("Você tem certeza que deseja sair? 'S' para sim ou qualquer outra tecla para não");
                             var opcaoSair = Console.ReadLine();

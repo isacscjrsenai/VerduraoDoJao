@@ -11,18 +11,34 @@ namespace VerduraoDoJao.Melanciometro
     {
         static void Main(string[] args)
         {
+            string usuario = "JOÃO", usuarioLogin, senha = "123", senhaLogin;
+            int tentativasLogin = 0;
             Dictionary<string, Dictionary<string,string>> caminhoes = new Dictionary<string, Dictionary<string, string>>();
             Dictionary<string, Dictionary<string, string>> produtos = new Dictionary<string, Dictionary<string, string>>
             {
-                { "Melancia Normal", new Dictionary<string, string>()
-                }
+                { "Melancia Normal", new Dictionary<string, string>()},
+                { "Melancia Baby", new Dictionary<string, string>()}
             };
             produtos["Melancia Normal"].Add("preço", "5.5");
             produtos["Melancia Normal"].Add("custo", "2.5");
-            produtos.Add("Melancia Baby", new Dictionary<string, string>());
             produtos["Melancia Baby"].Add("preço", "8.56");
             produtos["Melancia Baby"].Add("custo", "4.5");
-            const double precoNormal = 5.5 , precoBaby = 8.56;
+            do
+            {
+                Console.WriteLine("Digite o usuário");
+                usuarioLogin = Console.ReadLine();
+                Console.WriteLine("Digite a senha");
+                senhaLogin = Console.ReadLine();
+
+            } while (tentativasLogin <= 3 && usuarioLogin != usuario && senhaLogin != senha );
+            
+            
+            if (tentativasLogin > 3)
+            {
+                Console.WriteLine("Tentativas de Login Excedidas");
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
             while (true)
             {
                 Console.Clear();
@@ -43,6 +59,19 @@ namespace VerduraoDoJao.Melanciometro
                         string placa = Console.ReadLine();
                         Console.WriteLine("Escreva o cpf ou cnpj do  Proprietário"); 
                         string id  = Console.ReadLine();
+                        int numMenu = 1;
+                        foreach (string key in produtos.Keys)
+                        {
+                            Console.WriteLine($"{numMenu} - {key}");
+                            numMenu++;
+                        }
+                        Console.WriteLine("Digite a opção de produto para adicionar");
+                        var opMenu = int.Parse(Console.ReadLine());
+                        while (true)
+                        {
+                            Console.WriteLine($"Digite quantos kg de {produtos.Keys.ToList()[opMenu]}:");
+
+                        }
                         Console.WriteLine("Escreva quantas Kg de melâncias normal?");
                         int numMelancia = int.Parse(Console.ReadLine());
                         Console.WriteLine("Escreva quantos Kg de melância Baby?");
@@ -136,7 +165,7 @@ namespace VerduraoDoJao.Melanciometro
 
                         break;
 
-                    case "5":
+                    case "5": 
                         Console.Clear();
                         Console.WriteLine("ADICIONAR UM PRODUTO");
                         Console.WriteLine("Digite o nome do produto:");
@@ -145,11 +174,29 @@ namespace VerduraoDoJao.Melanciometro
                         var precoProduto = Console.ReadLine();
                         Console.WriteLine("Digite o custo do produto:");
                         var custoProduto = Console.ReadLine();
-
+                        produtos.Add(nomeProduto, new Dictionary<string, string>());
+                        produtos[nomeProduto].Add("preço", precoProduto);
+                        produtos[nomeProduto].Add("custo", custoProduto);
+                        Console.WriteLine("PRODUTO ADICIONADO");
+                        Console.ReadLine();
+                        Console.Clear();
                         break;
                     
                     case "6": 
+
                         Console.Clear();
+                        Console.WriteLine("DELETAR UM PRODUTO");
+                        Console.WriteLine("Digite o nome do produto:");
+                        var produtoADeletar = Console.ReadLine();
+                        if (produtos.ContainsKey(produtoADeletar))
+                        {
+                            produtos[produtoADeletar].Remove(produtoADeletar);
+                            Console.WriteLine("PRODUTO DELETADO");
+                        }
+                        else 
+                        {
+                            Console.WriteLine($"Não existe registro de produto com o nome:{produtoADeletar}");
+                        }
                         break;
 
                     case "7":

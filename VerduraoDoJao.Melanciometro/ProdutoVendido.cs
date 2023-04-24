@@ -9,18 +9,21 @@ namespace VerduraoDoJao.Melanciometro
 {
     internal class ProdutoVendido
     {
-        public double quantVendida;
-        public double valorVendido;
-        public double lucroObtido;
-        public int diaDaSemana;
+        public double QuantVendida { get; set; }
+        public double ValorVendido { get; set; }
+        public double LucroObtido { get; set; }
+        public int DiaDaSemana { get; set; }
+        public string DescPromocao { get; set; }
         public ProdutoVendido(Produto produto,double quantVendida, int diaDaSemana)
         {
-            var preco = Promocao.AplicaPromacao(produto, diaDaSemana);
-            var custo = produto.Custo;
-            this.valorVendido = quantVendida * preco;
-            this.quantVendida = quantVendida;
-            this.lucroObtido = quantVendida * (preco - custo);
-            this.diaDaSemana = diaDaSemana;
+            var promocao = Promocao.AplicaPromocao(produto, diaDaSemana);
+            double preco = double.Parse(promocao[0]);
+            double custo = produto.Custo;
+            ValorVendido = quantVendida * preco;
+            QuantVendida = quantVendida;
+            LucroObtido = quantVendida * (preco - custo);
+            DiaDaSemana = diaDaSemana;
+            DescPromocao = promocao[1];
         }
     }
 }

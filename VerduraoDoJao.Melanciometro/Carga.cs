@@ -9,6 +9,7 @@ namespace VerduraoDoJao.Melanciometro
     internal class Carga
     {
         public int id;
+        public bool fechada;
         public Dictionary<object, ProdutoVendido> Produtos { set; get; }
         public Carga(int idCarga) 
         {

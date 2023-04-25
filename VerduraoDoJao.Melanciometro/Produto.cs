@@ -14,11 +14,13 @@ namespace VerduraoDoJao.Melanciometro
         public string Nome { set; get; }
         public double Preco { set; get; }
         public double Custo { set; get; }
-        public Produto(string nome, double preco, double custo)
+        public string Unidade { set; get; } 
+        public Produto(string nome, double preco, double custo, string unidade)
         {
             Nome = nome;
             Preco = preco;
             Custo = custo;
+            Unidade = unidade;
             produtos.Add(this);
         }
     }

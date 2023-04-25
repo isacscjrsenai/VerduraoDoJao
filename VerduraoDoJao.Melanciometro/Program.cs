@@ -17,8 +17,8 @@ namespace VerduraoDoJao.Melanciometro
             //Login.Logar();
             Menu.CriaMenuPrincipal();
             Menu.CriaMenuSemana();
-            new Produto("Melância Normal", 5.50, 2.5);
-            new Produto("Melância Baby", 8.56, 4.5);
+            new Produto("Melância Normal", 5.50, 2.5,"Kg");
+            new Produto("Melância Baby", 8.56, 4.5, "Kg");
 
             while (true)
             {
@@ -33,62 +33,18 @@ namespace VerduraoDoJao.Melanciometro
             string placa = new Campo("Escreva a placa do caminhão", "Placa","Placa").Show();
             string id = new Campo("Escreva o CPF ou CNPJ do Proprietário", "Id", "Id").Show();
             new Caminhao(placa, id);
-            Menu.CriaMenuSemana();
             int diaDaSemana = (int)Menu.Menus["Semana"].ShowSelectable();
+      
             Menu MenuVenda = ConstroiMenuVenda(placa, diaDaSemana);
-            bool vendaFechada;
+            bool vendaFechada = false;
             do
-            {
-                vendaFechada = (bool)MenuVenda.ShowSelectable();
-            } while (vendaFechada != true);
-            
-            do
-            {
-                do
+            {  
+            var Result = MenuVenda.ShowSelectable();
+            if (Result != null)
                 {
-                    Console.Clear();
-                    //menu
-                    numMenu = 1;
-                    opMenu = 0;
-                    foreach (var prod in Produto.produtos)
-                    {
-                        Console.WriteLine($"{numMenu} - {prod.Nome} - R$ {prod.Preco}");
-                        numMenu++;
-                    }
-                    Console.WriteLine($"{numMenu} - Fechar Venda");
-                    Console.WriteLine("Digite a opção de produto para adicionar");
-                    try
-                    {
-                        opMenu = int.Parse(Console.ReadLine());
-                    }
-                    catch (FormatException)
-                    {
-                        //TODO Tratar exceção como o tipo correto de exceção
-                        Console.WriteLine("Comando inválido");
-                        Console.ReadLine();
-                        opMenu = numMenu + 1;
-                    }
-                } while (opMenu > numMenu);
-                
-                //fim menu
-                if (opMenu == numMenu)
-                {
-                    break;
+                    vendaFechada = (bool)Result;
                 }
-                var produto = Produto.produtos[opMenu - 1];
-                idDaVenda = Caminhao.caminhoes[placa].CriaCarga();
-                
-                //Quantidade de produto
-                double quantProduto = 0;
-                quantProduto = double.Parse(new Campo($"Digite a quantidade de {produto.Nome} em Kg:","Quantidade").Show());                
-                Console.WriteLine($"Digite o dia da semana:\n 1 - Segunda\n 2 - Terça-Feira\n 3 - Quarta-Feira\n 4 - Quinta-Feira\n 5 - Sexta-Feira");
-                int diaDaSemana = int.Parse(Console.ReadLine());
-                Caminhao.caminhoes[placa].AdicionaCarga(produto, diaDaSemana, quantProduto, idDaVenda);
-            
-            } while (opMenu != numMenu);
-            ImprimiCaminhao(placa);
-            Console.ReadLine();
-
+            } while (vendaFechada != true);
         }
         internal static void DeletaCaminhao()
         {
@@ -155,6 +111,7 @@ namespace VerduraoDoJao.Melanciometro
             }
 
             double precoProduto =0, custoProduto = 0;
+            string unidade;
             do
             {
                 if (custoProduto != 0 && precoProduto != 0 && custoProduto >= precoProduto)
@@ -165,8 +122,10 @@ namespace VerduraoDoJao.Melanciometro
                 precoProduto = double.Parse(Console.ReadLine());
                 Console.WriteLine("Digite o custo do produto:");
                 custoProduto = double.Parse(Console.ReadLine());
+                Console.WriteLine("Digite a unidade de medida (Kg, Unidade, Peça, Bandeja, Caixa)");
+                unidade = Console.ReadLine();
             } while (custoProduto >= precoProduto);        
-            new Produto(nomeProduto,precoProduto,custoProduto);
+            new Produto(nomeProduto,precoProduto,custoProduto,unidade);
             Console.WriteLine("PRODUTO ADICIONADO");
             Console.ReadLine();
             Console.Clear();           
@@ -239,13 +198,33 @@ namespace VerduraoDoJao.Melanciometro
 
         internal static bool FechaVenda(string placa) 
         {
+            int ultimaCarga = Caminhao.caminhoes[placa].Cargas.Count-1;
+            if (ultimaCarga ==-1) //não comprou nada ainda
+            {
+                Console.WriteLine("Tem certeza que o cliente não quer levar nada? S(Sim) ou N(não)");
+                var resposta = Console.ReadLine().ToString().Trim().ToUpper();
+                if (resposta.Equals("S")) return true;
+                else return false;
+            }
+            Caminhao.caminhoes[placa].Cargas[ultimaCarga].fechada = true;
             ImprimiCaminhao(placa);
+            Console.ReadLine();
             return true;
         }
 
-        internal static void RegistraVenda(Produto produto, int diaDaSemana)
+        internal static void RegistraVenda(string placa ,Produto produto, int diaDaSemana)
         {
-
+            double quantProduto;
+            if (!produto.Unidade.Equals("Kg"))
+            {
+                quantProduto = int.Parse(new Campo($"Digite a quantidade de {produto.Unidade} de {produto.Nome}", "Quantidade Inteira").Show());
+            }
+            else
+            {
+                quantProduto = double.Parse(new Campo($"Digite a quantidade de {produto.Unidade} de {produto.Nome}", "Quantidade").Show());
+            }
+            int idDaVenda = GetIdDaVenda(placa);
+            Caminhao.caminhoes[placa].AdicionaCarga(produto, diaDaSemana, quantProduto, idDaVenda);
         }
         internal static Menu ConstroiMenuVenda(string placa, int diaDaSemana)
         {
@@ -257,10 +236,31 @@ namespace VerduraoDoJao.Melanciometro
                 var promocao = Promocao.AplicaPromocao(produto, diaDaSemana);
                 double preco = double.Parse(promocao[0]);
                 var descricaoPromocao = promocao[1];
-                MenuVenda.Opcoes.Add($"{nome} - R$ {preco} - {descricaoPromocao}", () => RegistraVenda(produto, diaDaSemana));
+                MenuVenda.Opcoes.Add($"{nome} - R$ {preco} - {descricaoPromocao}", new Action( () => RegistraVenda(placa,produto, diaDaSemana)));
             }
-            MenuVenda.Opcoes.Add("Fecha Venda", () => FechaVenda(placa));
+            MenuVenda.Opcoes.Add("Fecha Venda", new Func<bool>( () => FechaVenda(placa) ));
             return MenuVenda;
+        }
+        internal static int GetIdDaVenda(string placa)
+        {
+            int idDaVenda;
+            //se ainda não existe nenhuma carga cria a carga
+            if(Caminhao.caminhoes[placa].Cargas.Count == 0)
+            {
+                return Caminhao.caminhoes[placa].CriaCarga();
+            }
+
+            int ultimaCarga = Caminhao.caminhoes[placa].Cargas.Count -1;
+
+            if (Caminhao.caminhoes[placa].Cargas[ultimaCarga].fechada)
+            {
+                idDaVenda = Caminhao.caminhoes[placa].CriaCarga();
+            }
+            else
+            {
+                idDaVenda = ultimaCarga;
+            }
+            return idDaVenda;
         }
     }   
     

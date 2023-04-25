@@ -30,13 +30,22 @@ namespace VerduraoDoJao.Melanciometro
         }
         public static List<string> AplicaPromocao(Produto produto, int diaDaSemana)
         {
-            var preco = produto.Preco;
+            double preco = produto.Preco;
+            double desconto;
+            string descPromocao;
             var promocao = promocoes.Find(x => x.diaDaSemana == diaDaSemana);
-            var desconto = promocao.desconto;
-            var descPromocao = promocao.descPromocao;
+            if (promocao != null)
+            {
+                desconto = promocao.desconto;
+                descPromocao = promocao.descPromocao;
+            }
+            else
+            {
+                desconto = 0;
+                descPromocao = "PROMAÇÃO SEMPRE NULL";
+            }
+            
             var precoPromocional = (preco - (preco * (desconto/100))).ToString();
-
-
             return new List<string> { precoPromocional, descPromocao };
         }
     }

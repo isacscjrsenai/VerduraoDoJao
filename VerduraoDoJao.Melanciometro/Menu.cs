@@ -14,7 +14,7 @@ namespace VerduraoDoJao.Melanciometro
 	internal  class Menu
 	{
 
-        public Dictionary<string, Action> Opcoes = new Dictionary<string, Action>() ;
+        public Dictionary<string, Delegate> Opcoes = new Dictionary<string, Delegate>() ;
         public string Caption,Titulo;
         public ConsoleColor? CorDoTexto,CorDaSelecao, CorDoFundo;
         public static Dictionary<string, Menu> Menus = new Dictionary<string, Menu>();
@@ -184,13 +184,13 @@ namespace VerduraoDoJao.Melanciometro
         public static void CriaMenuPrincipal()
 		{
             new Menu("Principal");   
-			Menus["Principal"].Opcoes.Add("Registrar Caminhão", Program.RegistraCaminhao );
-            Menus["Principal"].Opcoes.Add("Deletar Caminhão", Program.DeletaCaminhao);
-            Menus["Principal"].Opcoes.Add("Procurar Caminhão pela Placa", Program.ProcuraCaminhao);
-            Menus["Principal"].Opcoes.Add("Procurar Caminhão pelo CPF/CNPJ do proprietário", Program.ProcuraId);
-            Menus["Principal"].Opcoes.Add("Registrar Produto", Program.RegistraProduto);
-            Menus["Principal"].Opcoes.Add("Deletar Produto", Program.DeletaProduto);
-            Menus["Principal"].Opcoes.Add("Sair", Program.Sair);
+			Menus["Principal"].Opcoes.Add("Registrar Caminhão", new Action(Program.RegistraCaminhao) );
+            Menus["Principal"].Opcoes.Add("Deletar Caminhão", new Action(Program.DeletaCaminhao));
+            Menus["Principal"].Opcoes.Add("Procurar Caminhão pela Placa", new Action(Program.ProcuraCaminhao));
+            Menus["Principal"].Opcoes.Add("Procurar Caminhão pelo CPF/CNPJ do proprietário", new Action(Program.ProcuraId));
+            Menus["Principal"].Opcoes.Add("Registrar Produto", new Action(Program.RegistraProduto));
+            Menus["Principal"].Opcoes.Add("Deletar Produto", new Action(Program.DeletaProduto));
+            Menus["Principal"].Opcoes.Add("Sair", new Action(Program.Sair));
         }
         public static void CriaMenuSemana()
         {
@@ -198,9 +198,9 @@ namespace VerduraoDoJao.Melanciometro
                                     "Quarta-Feira" , "Quinta-Feira", 
                                     "Sexta-Feira"  , "Sabádo", "Domingo" };
             new Menu("Semana");
-            for(var i =0; i <= diaDaSemana.Count(); )
+            for(var i =0; i <= diaDaSemana.Count()-1; i++ )
             {
-                Menus["Semana"].Opcoes.Add(diaDaSemana[0], () => Program.Semana(i + 1));
+                Menus["Semana"].Opcoes.Add(diaDaSemana[i], new Func<int>( () =>Program.Semana(i + 1)));
             }
             Menus["Semana"].Caption = "Selecione o dia da semana";
         }
@@ -326,7 +326,7 @@ namespace VerduraoDoJao.Melanciometro
                         Console.BackgroundColor = ConsoleColor.Black;
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.CursorVisible = true;
-                        return Acao.DynamicInvoke();
+                        return  Acao.DynamicInvoke();
                 }
             } while(tecla.Key != ConsoleKey.Enter);
             return null;

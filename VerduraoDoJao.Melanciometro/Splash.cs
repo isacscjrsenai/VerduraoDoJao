@@ -46,7 +46,6 @@ namespace VerduraoDoJao.Melanciometro
         static void Buzina()
         {
             var buzina = Path.Combine(Environment.CurrentDirectory, "buzina.wav");
-            Console.WriteLine($"{buzina}");
             SoundPlayer player = new SoundPlayer(buzina);
             player.Play();
           

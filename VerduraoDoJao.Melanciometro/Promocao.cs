@@ -42,7 +42,7 @@ namespace VerduraoDoJao.Melanciometro
             else
             {
                 desconto = 0;
-                descPromocao = "PROMAÇÃO SEMPRE NULL";
+                descPromocao = "";
             }
             
             var precoPromocional = (preco - (preco * (desconto/100))).ToString();

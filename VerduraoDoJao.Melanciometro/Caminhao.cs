@@ -33,7 +33,25 @@ namespace VerduraoDoJao.Melanciometro
         public void AdicionaCarga(Produto Produto, int diaDaSemana, double quantProduto, int idDaVenda)
         {
             string nomeProduto = Produto.Nome;
-            this.Cargas[idDaVenda].Produtos.Add(nomeProduto, new ProdutoVendido(Produto, quantProduto, diaDaSemana));
+            //se o produto já foi adicionado
+            if (this.Cargas[idDaVenda].Produtos.ContainsKey(nomeProduto))
+            {
+                var op = new Campo("Já existe registro desse produto\n Você quer adicionar ou substituir o valor:\n1 - Adicionar\n2- Substituir", "Opções-2").Show();
+                Console.WriteLine("Já existe registro desse produto\n Você quer adicionar ou substituir o valor:\n1 - Adicionar\n2- Substituir");
+                if (int.Parse(op) == 1)
+                {
+                    var quantAnterior = this.Cargas[idDaVenda].Produtos[nomeProduto].QuantVendida;
+                    ModificaCarga(Produto, diaDaSemana, quantProduto + quantAnterior, idDaVenda);
+                }
+                else //usuario digitou 2 e quer modificar a quantidade de produto comprado
+                {
+                    ModificaCarga(Produto, diaDaSemana, quantProduto, idDaVenda);
+                }
+            }
+            else
+            {
+                this.Cargas[idDaVenda].Produtos.Add(nomeProduto, new ProdutoVendido(Produto, quantProduto, diaDaSemana));
+            }
         }
         public void ModificaCarga(Produto Produto, int diaDaSemana, double novaQuantProduto, int idDaVenda)
         {

@@ -13,8 +13,8 @@ namespace VerduraoDoJao.Melanciometro
     {
         static void Main()
         {
-            //Splash.Show();
-            //Login.Logar();
+            Splash.Show();
+            Login.Logar();
             Menu.CriaMenuPrincipal();
             Menu.CriaMenuSemana();
             new Produto("Melância Normal", 5.50, 2.5,"Kg");
@@ -31,8 +31,16 @@ namespace VerduraoDoJao.Melanciometro
             
             Console.Clear();
             string placa = new Campo("Escreva a placa do caminhão", "Placa","Placa").Show();
-            string id = new Campo("Escreva o CPF ou CNPJ do Proprietário", "Id", "Id").Show();
-            new Caminhao(placa, id);
+            string id;
+            if (Caminhao.caminhoes.ContainsKey(placa))
+            {
+                id = Caminhao.caminhoes[placa].Proprietario;
+            }
+            else
+            {
+                id = new Campo("Escreva o CPF ou CNPJ do Proprietário", "Id", "Id").Show();
+                new Caminhao(placa, id);
+            }
             int diaDaSemana = (int)Menu.Menus["Semana"].ShowSelectable();
       
             Menu MenuVenda = ConstroiMenuVenda(placa, diaDaSemana);
@@ -118,10 +126,9 @@ namespace VerduraoDoJao.Melanciometro
                 {
                     Console.WriteLine("O preço não é maior que o custo");
                 }
-                Console.WriteLine("Digite o preço do produto:");
-                precoProduto = double.Parse(Console.ReadLine());
+                precoProduto = double.Parse(new Campo("Digite o preço do produto","Quantidade").Show());
                 Console.WriteLine("Digite o custo do produto:");
-                custoProduto = double.Parse(Console.ReadLine());
+                custoProduto = double.Parse(new Campo("Digite o custo do produto", "Quantidade").Show());
                 Console.WriteLine("Digite a unidade de medida (Kg, Unidade, Peça, Bandeja, Caixa)");
                 unidade = Console.ReadLine();
             } while (custoProduto >= precoProduto);        
@@ -174,7 +181,10 @@ namespace VerduraoDoJao.Melanciometro
             Console.WriteLine($"PROPRIETÁRIO CPF/CNPJ: {id}");
             Console.WriteLine("VENDAS");
             var idDasVendas = Caminhao.caminhoes[placaAProcurar].Cargas.Keys.ToList();
-
+            if (idDasVendas.Count == 0)
+            {
+                Console.WriteLine("SEM VENDAS REGISTRADAS");
+            }
             foreach (var venda in idDasVendas)
             {
                 Console.WriteLine($"VENDA {venda}");

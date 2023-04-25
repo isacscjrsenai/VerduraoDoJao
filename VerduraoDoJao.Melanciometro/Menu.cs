@@ -200,7 +200,8 @@ namespace VerduraoDoJao.Melanciometro
             new Menu("Semana");
             for(var i =0; i <= diaDaSemana.Count()-1; i++ )
             {
-                Menus["Semana"].Opcoes.Add(diaDaSemana[i], new Func<int>( () =>Program.Semana(i + 1)));
+                var dia = i + 1;
+                Menus["Semana"].Opcoes.Add(diaDaSemana[i], new Func<int>( () =>Program.Semana(dia)));
             }
             Menus["Semana"].Caption = "Selecione o dia da semana";
         }

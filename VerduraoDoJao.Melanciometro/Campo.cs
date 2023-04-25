@@ -29,7 +29,7 @@ namespace VerduraoDoJao.Melanciometro
         public bool Valido(string resposta)
         {
             if (resposta == null) return false;
-            switch (this.Tipo)
+            switch (this.Tipo.Split('-')[0])
             {
                 case "Placa":
                     string placaMercosulPattern = "^[A-Z]{3}[0-9][0-9A-Z][0-9]{2}$";
@@ -53,6 +53,14 @@ namespace VerduraoDoJao.Melanciometro
                         if (result > 0) return true;
                     }
                     else return false;
+                    break;
+                case "Opções":
+                    int resultOp;
+                    if (int.TryParse(resposta, out resultOp))
+                    {
+                        var ultimaOp = int.Parse(this.Tipo.Split('-')[1]);
+                        if (resultOp > 0 && resultOp <= ultimaOp) return true;
+                    }
                     break;
             }
             return true;
